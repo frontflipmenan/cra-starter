@@ -1,1 +1,1 @@
-export const LOGIN_LOADING = "LOGIN_LOADING";
+export const LOGIN_LOADING: string = "LOGIN_LOADING";

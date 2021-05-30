@@ -16,16 +16,14 @@ export default function Login({}: LoginProps): JSX.Element {
   //global state / redux
   const { isLoggedIn } = useAppSelector((state) => state.UserReducer);
   const dispatch = useAppDispatch();
-  //component level actions
-  const onLoginStatusButtonClick = () => {
-    dispatch(setUserAuthState(!isLoggedIn));
-  };
   //component
-  if (isLoggedIn) return <Redirect to="/" />;
+  if (isLoggedIn) return <Redirect data-testid="dashboardRedirect" to="/" />;
   return (
-    <div>
-      <p>{isLoggedIn ? "yes" : "no"} test 123 </p>
-      <button onClick={onLoginStatusButtonClick}>change login status</button>
+    <div data-testid="login">
+      <p>Login</p>
+      <button onClick={() => dispatch(setUserAuthState(!isLoggedIn))}>
+        change login status
+      </button>
     </div>
   );
 }

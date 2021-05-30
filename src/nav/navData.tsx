@@ -13,6 +13,7 @@ interface items {
   label: string;
 }
 
+//public routes
 export const navRoutes: routes[] = [
   {
     path: "/login",

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from "react-router-dom";
+import firebase from "firebase";
+
 //Redux Stuff
 import { useAppSelector } from "../redux/hooks";
 import { navRoutes, authenticatedRoutes } from "./navData";
-
+import AuthService from "../services/auth";
+import { useAppDispatch } from "../redux/hooks";
+import { setUserAuthState } from "../redux/actions/usersActions";
 /*
 Main Navigation Component
 Two states for the component: is logged in and is not logged in
@@ -44,6 +48,24 @@ export const Routes = ({}: Props): JSX.Element => {
   );
 };
 export default function Nav({}: Props): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    //Firebase Auth Logic
+    const auth = AuthService(); //create auth service
+    //handle updating redux state with logged in logic
+    const setAuthState = (isLoggedIn: boolean) =>
+      dispatch(setUserAuthState(isLoggedIn));
+    //starts listeners for firebase auth changes
+    const unsubscribe = firebase
+      .auth()
+      .onAuthStateChanged((user) =>
+        auth.onAuthStateChanged(user, setAuthState)
+      );
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   //global state / redux
   const { loginLoading } = useAppSelector((state) => state.UserReducer);
 

@@ -9,7 +9,18 @@ import { UserState } from "../redux/reducers/UserReducer";
 import { navItems, authenticatedNavItems } from "../nav/navData";
 //mocks
 jest.mock("../redux/hooks");
-
+const mockFunction = jest.fn().mockImplementation();
+jest.mock("firebase", () => {
+  return {
+    auth: () => {
+      return {
+        signInWithEmailAndPassword: mockFunction,
+        createUserWithEmailAndPassword: mockFunction,
+        onAuthStateChanged: () => () => console.log(),
+      };
+    },
+  };
+});
 //helpers
 let mockedUserAppSelectorFunction: jest.Mock;
 const mockUseAppSelector = (state: UserState): void => {
@@ -39,6 +50,7 @@ const renderRouter = (): RenderResult => {
 //cleanup
 afterAll(() => {
   mockedUserAppSelectorFunction.mockClear();
+  mockFunction.mockClear();
 });
 
 describe("Navigation Component", () => {
